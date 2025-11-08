@@ -1,58 +1,108 @@
+from rich.console import Console
+from tabulate import tabulate
+
 from models.projects import Project
 from models.tasks import Task
 from models.users import User
 
+from .persistence import save_data
+
+console = Console()
+
 
 def add_user(args):
     user = User(username=args.username, email=args.email)
-    print(f"User '{user.username}' added successfully.")
+    console.print(f"✓ User '{user.username}' added successfully.", style="bold green")
+    save_data()
     return user
 
 
 def add_project(args):
     project = Project(title=args.title, due_date=args.due_date)
-    print(f"Project '{project.title}' added successfully.")
+    console.print(
+        f"✓ Project '{project.title}' added successfully.", style="bold green"
+    )
+    save_data()
     return project
 
 
 def add_task(args):
     assigned_user = next((u for u in User.all if u.username == args.assigned_to), None)
     if not assigned_user:
-        print(f"User '{args.assigned_to}' not found.")
+        console.print(f"✗ User '{args.assigned_to}' not found.", style="bold red")
         return None
+
     task = Task(title=args.title, status=args.status, assigned_to=assigned_user)
-    print(
-        f"Task '{task.title}' added successfully and assigned to '{assigned_user.username}'."
-    )
+
+    # Optionally link to a project
+    if args.project:
+        project = next((p for p in Project.all if p.title == args.project), None)
+        if project:
+            task.project = project
+            console.print(
+                f"✓ Task '{task.title}' added to project '{project.title}' and assigned to '{assigned_user.username}'.",
+                style="bold green",
+            )
+        else:
+            console.print(
+                f"✗ Project '{args.project}' not found. Task created without project.",
+                style="bold yellow",
+            )
+    else:
+        console.print(
+            f"✓ Task '{task.title}' added successfully and assigned to '{assigned_user.username}'.",
+            style="bold green",
+        )
+
+    save_data()
     return task
 
 
-def list_users():
+def list_users(args):
     if not User.all:
-        print("No users found.")
+        console.print("No users found.", style="yellow")
         return
-    print("\nUsers:")
-    for user in User.all:
-        print(f"  - {user.username} ({user.email})")
+
+    data = [[user.username, user.email] for user in User.all]
+    console.print(
+        "\n" + tabulate(data, headers=["Username", "Email"], tablefmt="grid"),
+        style="cyan",
+    )
+    print()
 
 
-def list_projects():
+def list_projects(args):
     if not Project.all:
         print("No projects found.")
         return
-    print("\nProjects:")
-    for project in Project.all:
-        print(f"  - {project.title} (Due: {project.due_date})")
+
+    data = [
+        [project.title, project.due_date, len(project.tasks)] for project in Project.all
+    ]
+    print(
+        "\n" + tabulate(data, headers=["Title", "Due Date", "Tasks"], tablefmt="grid")
+    )
+    print()
 
 
-def list_tasks():
+def list_tasks(args):
     if not Task.all:
         print("No tasks found.")
         return
-    print("\nTasks:")
+
+    data = []
     for task in Task.all:
         assigned = task.assigned_to.username if task.assigned_to else "Unassigned"
-        print(f"  - {task.title} | Status: {task.status} | Assigned to: {assigned}")
+        project_name = task.project.title if task.project else "No project"
+        data.append([task.title, task.status, assigned, project_name])
+
+    print(
+        "\n"
+        + tabulate(
+            data, headers=["Title", "Status", "Assigned To", "Project"], tablefmt="grid"
+        )
+    )
+    print()
 
 
 def find_user_by_username(username):
