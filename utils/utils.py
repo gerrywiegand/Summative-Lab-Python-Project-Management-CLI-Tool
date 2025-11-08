@@ -31,11 +31,29 @@ def add_task(args):
     if not assigned_user:
         console.print(f"✗ User '{args.assigned_to}' not found.", style="bold red")
         return None
+
     task = Task(title=args.title, status=args.status, assigned_to=assigned_user)
-    console.print(
-        f"✓ Task '{task.title}' added successfully and assigned to '{assigned_user.username}'.",
-        style="bold green",
-    )
+
+    # Optionally link to a project
+    if args.project:
+        project = next((p for p in Project.all if p.title == args.project), None)
+        if project:
+            task.project = project
+            console.print(
+                f"✓ Task '{task.title}' added to project '{project.title}' and assigned to '{assigned_user.username}'.",
+                style="bold green",
+            )
+        else:
+            console.print(
+                f"✗ Project '{args.project}' not found. Task created without project.",
+                style="bold yellow",
+            )
+    else:
+        console.print(
+            f"✓ Task '{task.title}' added successfully and assigned to '{assigned_user.username}'.",
+            style="bold green",
+        )
+
     save_data()
     return task
 

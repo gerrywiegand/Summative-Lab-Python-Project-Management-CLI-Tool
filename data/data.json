@@ -1,10 +1,28 @@
 {
   "users": [
     {
-      "username": "testuser",
-      "email": "test@example.com"
+      "username": "alice",
+      "email": "alice@example.com"
     }
   ],
-  "projects": [],
-  "tasks": []
+  "projects": [
+    {
+      "title": "Website Redesign",
+      "due_date": "2025-12-15"
+    }
+  ],
+  "tasks": [
+    {
+      "title": "Design homepage",
+      "status": "pending",
+      "assigned_to": "alice",
+      "project": "Website Redesign"
+    },
+    {
+      "title": "Code review",
+      "status": "done",
+      "assigned_to": "alice",
+      "project": null
+    }
+  ]
 }

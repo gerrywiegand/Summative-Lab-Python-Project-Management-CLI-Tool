@@ -32,6 +32,9 @@ add_parser.add_argument(
     "status", type=str, help="Status of the task (e.g., 'todo', 'in-progress', 'done')"
 )
 add_parser.add_argument("assigned_to", type=str, help="User assigned to the task")
+add_parser.add_argument(
+    "project", type=str, nargs="?", default=None, help="Project title (optional)"
+)
 add_parser.set_defaults(func=u.add_task)
 add_parser = subparsers.add_parser("list-tasks", help="List all tasks")
 add_parser.set_defaults(func=u.list_tasks)
