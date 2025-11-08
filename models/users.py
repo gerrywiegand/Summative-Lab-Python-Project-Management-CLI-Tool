@@ -53,3 +53,6 @@ class User:
             if task.assigned_to == self:
                 if task not in self.tasks:
                     self.tasks.append(task)
+
+    def to_dict(self):
+        return {"username": self.username, "email": self.email}

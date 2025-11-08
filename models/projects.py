@@ -50,3 +50,6 @@ class Project:
             if task.assigned_to == user:
                 if user not in self.users:
                     self.users.append(user)
+
+    def to_dict(self):
+        return {"title": self.title, "due_date": self.due_date}

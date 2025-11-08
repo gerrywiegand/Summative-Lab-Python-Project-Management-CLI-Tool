@@ -29,3 +29,11 @@ class Task:
             if not hasattr(user, "tasks"):
                 user.tasks = []
             user.tasks.append(self)
+
+    def to_dict(self):
+        return {
+            "title": self.title,
+            "status": self.status,
+            "assigned_to": self.assigned_to.username if self.assigned_to else None,
+            "project": self.project.title if self.project else None,
+        }
