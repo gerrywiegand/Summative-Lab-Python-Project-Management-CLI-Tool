@@ -56,3 +56,13 @@ class User:
 
     def to_dict(self):
         return {"username": self.username, "email": self.email}
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(username=data["username"], email=data["email"])
+
+    def __str__(self):
+        return f"User(username='{self.username}', email='{self.email}')"
+
+    def __repr__(self):
+        return self.__str__()

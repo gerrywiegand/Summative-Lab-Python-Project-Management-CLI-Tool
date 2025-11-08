@@ -53,3 +53,13 @@ class Project:
 
     def to_dict(self):
         return {"title": self.title, "due_date": self.due_date}
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(title=data["title"], due_date=data["due_date"])
+
+    def __str__(self):
+        return f"Project(title='{self.title}', due_date='{self.due_date}', tasks={len(self.tasks)})"
+
+    def __repr__(self):
+        return self.__str__()

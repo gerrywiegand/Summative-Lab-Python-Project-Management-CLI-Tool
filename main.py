@@ -2,6 +2,9 @@ import argparse
 
 import utils as u
 
+# Load existing data at startup
+u.load_data()
+
 parser = argparse.ArgumentParser(description="Project Management CLI Tool")
 subparsers = parser.add_subparsers()
 
