@@ -13,3 +13,8 @@ add_parser.add_argument("email", type=str, help="Email of the user")
 add_parser = subparsers.add_parser("add-project", help="Add a new project")
 add_parser.add_argument("title", type=str, help="Title of the project")
 add_parser.add_argument("due_date", type=str, help="Due date of the project")
+
+add_parser = subparsers.add_parser("add-task", help="Add a new task")
+add_parser.add_argument("title", type=str, help="Title of the task")
+add_parser.add_argument("status", type=str, help="Status of the task")
+add_parser.add_argument("assigned_to", type=str, help="User assigned to the task")
